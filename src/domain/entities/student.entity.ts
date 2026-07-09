@@ -49,4 +49,17 @@ export class Student {
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }
+  public updateDetails(props: {
+    studentName: string;
+    dateOfBirth: Date;
+    gender: Gender;
+    previousSchool: string;
+    applyingGrade: Grade;
+  }): void {
+    this.studentName = props.studentName;
+    this.dateOfBirth = props.dateOfBirth;
+    this.gender = props.gender;
+    this.previousSchool = props.previousSchool;
+    this.applyingGrade = props.applyingGrade;
+  }
 }
