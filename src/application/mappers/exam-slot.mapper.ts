@@ -1,9 +1,9 @@
 import { ExamSlot } from 'src/domain/entities/exam-slot.entity';
-import { CreateExamSlotDto } from '../dto/exam-slot/create-exam-slot.dto';
-import { ExamSlotResponseDto } from '../dto/exam-slot/exam-slot-response.dto';
+import { ICreateExamSlotDto } from '../dto/exam-slot/create-exam-slot.dto';
+import { IExamSlotResponseDto } from '../dto/exam-slot/exam-slot-response.dto';
 
 export class ExamSlotMapper {
-  static toDomain(dto: CreateExamSlotDto): ExamSlot {
+  static toDomain(dto: ICreateExamSlotDto): ExamSlot {
     return new ExamSlot({
       date: dto.date,
       time: dto.time,
@@ -12,7 +12,7 @@ export class ExamSlotMapper {
     });
   }
 
-  static toResponseDto(slot: ExamSlot): ExamSlotResponseDto {
+  static toResponseDto(slot: ExamSlot): IExamSlotResponseDto {
     return {
       id: slot.id!,
       date: slot.date,
@@ -24,7 +24,7 @@ export class ExamSlotMapper {
     };
   }
 
-  static toResponseDtoList(slots: ExamSlot[]): ExamSlotResponseDto[] {
+  static toResponseDtoList(slots: ExamSlot[]): IExamSlotResponseDto[] {
     return slots.map((slot) => this.toResponseDto(slot));
   }
 }

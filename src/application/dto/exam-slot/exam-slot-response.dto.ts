@@ -1,4 +1,4 @@
-export interface ExamSlotResponseDto {
+export interface IExamSlotResponseDto {
   id: string;
   date: Date;
   time: string;

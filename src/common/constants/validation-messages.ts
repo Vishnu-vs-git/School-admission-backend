@@ -43,4 +43,18 @@ export const ValidationMessages = {
 
   APPLYING_GRADE_REQUIRED: 'Applying grade is required.',
   INVALID_APPLYING_GRADE: 'Please select a valid grade.',
+  //-----Exam-slot
+  DATE_REQUIRED: 'Date is required.',
+
+  TIME_REQUIRED: 'Time is required.',
+  TIME_MIN_LENGTH: 'Time is required.',
+  TIME_MAX_LENGTH: 'Time cannot exceed 20 characters.',
+  EXAM_SLOT_NOT_FOUND: 'Exam slot not found.',
+
+  SLOT_FULL: 'No seats are available for this slot.',
+
+  TOTAL_SEATS_REQUIRED: 'Total seats is required.',
+  INVALID_TOTAL_SEATS: 'Total seats must be greater than 0.',
+  EXAM_SLOT_REQUIRED: 'Exam slot is required.',
+  EXAM_SLOT_ALREADY_BOOKED: 'Student has already booked an exam slot.',
 } as const;

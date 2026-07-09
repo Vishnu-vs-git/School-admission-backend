@@ -62,4 +62,8 @@ export class Student {
     this.previousSchool = props.previousSchool;
     this.applyingGrade = props.applyingGrade;
   }
+  public bookExamSlot(examSlotId: string): void {
+    this.examSlotId = examSlotId;
+    this.status = ApplicationStatus.SLOT_BOOKED;
+  }
 }
