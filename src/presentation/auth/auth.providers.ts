@@ -10,6 +10,7 @@ import {
 import { UserRepository } from 'src/infrastructure/persistence/user/user.repository';
 import { BcryptPasswordService } from 'src/infrastructure/services/bcrypt/bcrypt-password.service';
 import { JwtTokenService } from 'src/infrastructure/services/jwt/jwt.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 export const authProviders = [
   {
@@ -27,6 +28,10 @@ export const authProviders = [
   {
     provide: REGISTER_USE_CASE,
     useClass: RegisterUseCase,
+  },
+  {
+    provide: JwtStrategy,
+    useClass: JwtStrategy,
   },
 
   {

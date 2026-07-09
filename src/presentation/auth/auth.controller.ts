@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { LOGIN_USE_CASE, REGISTER_USE_CASE } from 'src/common/di/injection-token';
 import { CookieUtil } from 'src/common/utils/cookie.util';
@@ -11,6 +11,9 @@ import { UserResponseDto } from 'src/application/dto/auth/user-response.dto';
 import { loginSchema } from './schemas/login.schema';
 import { LoginDto } from 'src/application/dto/auth/login.dto';
 import type { Response } from 'express';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
+import type { JwtPayload } from 'src/application/types/jwt-payload.type';
 
 @Controller('auth')
 export class AuthController {
@@ -47,5 +50,10 @@ export class AuthController {
     CookieUtil.setRefreshToken(response, result.refreshToken, this.configService);
 
     return result.user;
+  }
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  profile(@CurrentUser() user: JwtPayload) {
+    return user;
   }
 }
