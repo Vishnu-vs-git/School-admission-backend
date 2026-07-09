@@ -7,7 +7,7 @@ export interface IStudentRepository {
 
   findById(id: string): Promise<Student | null>;
 
-  // findByParent(parentId: string): Promise<Student[]>;
+  findByParentId(parentId: string): Promise<Student[]>;
 
   findAll(): Promise<Student[]>;
 }
