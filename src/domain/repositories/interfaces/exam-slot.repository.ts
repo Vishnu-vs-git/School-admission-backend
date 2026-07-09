@@ -4,6 +4,7 @@ export interface IExamSlotRepository {
   create(slot: ExamSlot): Promise<ExamSlot>;
 
   findAll(): Promise<ExamSlot[]>;
+  findAvailableSlots(): Promise<ExamSlot[]>;
 
   findById(id: string): Promise<ExamSlot | null>;
 
