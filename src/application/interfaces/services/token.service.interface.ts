@@ -1,7 +1,11 @@
 import { JwtPayload } from 'src/application/types/jwt-payload.type';
 
 export interface IJwtService {
-  generateToken(payload: JwtPayload): Promise<string>;
+  generateAccessToken(payload: JwtPayload): Promise<string>;
 
-  verifyToken(token: string): Promise<JwtPayload>;
+  generateRefreshToken(payload: JwtPayload): Promise<string>;
+
+  verifyAccessToken(token: string): Promise<JwtPayload>;
+
+  verifyRefreshToken(token: string): Promise<JwtPayload>;
 }
