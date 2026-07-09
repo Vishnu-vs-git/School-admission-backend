@@ -4,3 +4,4 @@ export const JWT_SERVICE = Symbol('JWT_SERVICE');
 export const LOGIN_USE_CASE = Symbol('LOGIN_USE_CASE');
 export const REGISTER_USE_CASE = Symbol('REGISTER_USE_CASE');
 export const STUDENT_REPOSITORY = Symbol('STUDENT_REPOSITORY');
+export const CREATE_STUDENT_USE_CASE = Symbol('CREATE_STUDENT_USE_CASE');
