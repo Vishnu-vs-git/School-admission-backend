@@ -8,5 +8,5 @@ export interface IExamSlotRepository {
 
   findById(id: string): Promise<ExamSlot | null>;
 
-  update(slot: ExamSlot): Promise<ExamSlot>;
+  update(slot: ExamSlot): Promise<ExamSlot | null>;
 }

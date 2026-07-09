@@ -33,7 +33,7 @@ export class ExamSlot {
   public bookSeat(): void {
     this.bookedSeats++;
   }
-   public isFull(): boolean {
+  public isFull(): boolean {
     return this.bookedSeats >= this.totalSeats;
   }
 }
