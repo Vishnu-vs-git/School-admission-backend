@@ -1,8 +1,10 @@
+import { CompleteRegistrationFeeUseCase } from 'src/application/use-cases/student/complete-registration-fee.use-case';
 import { CreateStudentUseCase } from 'src/application/use-cases/student/create-student.use-case';
 import { GetStudentUseCase } from 'src/application/use-cases/student/get-student.use-case';
 import { GetStudentsUseCase } from 'src/application/use-cases/student/get-students.usecase';
 import { UpdateStudentUseCase } from 'src/application/use-cases/student/update-student.use-case';
 import {
+  COMPLETE_REGISTRATION_FEE_USE_CASE,
   CREATE_STUDENT_USE_CASE,
   GET_STUDENT_USE_CASE,
   GET_STUDENTS_USE_CASE,
@@ -31,5 +33,9 @@ export const studentProviders = [
   {
     provide: GET_STUDENTS_USE_CASE,
     useClass: GetStudentsUseCase,
+  },
+  {
+    provide: COMPLETE_REGISTRATION_FEE_USE_CASE,
+    useClass: CompleteRegistrationFeeUseCase,
   },
 ];

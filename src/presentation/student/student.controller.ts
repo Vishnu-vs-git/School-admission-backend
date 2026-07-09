@@ -5,6 +5,7 @@ import { StudentResponseDto } from 'src/application/dto/student/student-response
 import type { ICreateStudentUseCase } from 'src/application/interfaces/use-cases/student/create-student.interface';
 
 import {
+  COMPLETE_REGISTRATION_FEE_USE_CASE,
   CREATE_STUDENT_USE_CASE,
   GET_STUDENT_USE_CASE,
   GET_STUDENTS_USE_CASE,
@@ -25,6 +26,7 @@ import type { IUpdateStudentUseCase } from 'src/application/interfaces/use-cases
 import { updateStudentSchema } from './schemas/update-student.schema';
 import type { IGetStudentUseCase } from 'src/application/interfaces/use-cases/student/get-student.interface';
 import type { IGetStudentsUseCase } from 'src/application/interfaces/use-cases/student/get-students.interface';
+import type { ICompleteRegistrationFeeUseCase } from 'src/application/interfaces/use-cases/student/complete-registration-fee.interface';
 
 @Controller('students')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -38,6 +40,8 @@ export class StudentController {
     private readonly getStudentUseCase: IGetStudentUseCase,
     @Inject(GET_STUDENTS_USE_CASE)
     private readonly getStudentsUseCase: IGetStudentsUseCase,
+    @Inject(COMPLETE_REGISTRATION_FEE_USE_CASE)
+    private readonly completeRegistrationFeeUseCase: ICompleteRegistrationFeeUseCase,
   ) {}
 
   @Post()
@@ -71,5 +75,13 @@ export class StudentController {
   @Roles(Role.PARENT)
   async getStudents(@CurrentUser() user: JwtPayload): Promise<StudentResponseDto[]> {
     return this.getStudentsUseCase.execute(user.id);
+  }
+  @Post(':id/pay')
+  @Roles(Role.PARENT)
+  async completeRegistrationFee(
+    @Param('id') studentId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<StudentResponseDto> {
+    return this.completeRegistrationFeeUseCase.execute(studentId, user.id);
   }
 }
