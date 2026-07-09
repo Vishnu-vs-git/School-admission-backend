@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { LOGIN_USE_CASE, REGISTER_USE_CASE } from 'src/common/di/injection-token';
 import { CookieUtil } from 'src/common/utils/cookie.util';
