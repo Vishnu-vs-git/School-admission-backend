@@ -5,6 +5,7 @@ import { UserSchema, UserSchemaFactory } from 'src/infrastructure/persistence/us
 import { authProviders } from './auth.providers';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { PassportModule } from '@nestjs/passport';
     ]),
   ],
   controllers: [AuthController],
-  providers: [...authProviders],
+  providers: [...authProviders, RolesGuard],
 })
 export class AuthModule {}
