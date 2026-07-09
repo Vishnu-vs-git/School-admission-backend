@@ -11,5 +11,5 @@ export const registerSchema = z.object({
 
   password: z.string().regex(PASSWORD_REGEX, ValidationMessages.INVALID_PASSWORD),
 
-   role: z.enum(Role),
+  role: z.enum(Role),
 });
