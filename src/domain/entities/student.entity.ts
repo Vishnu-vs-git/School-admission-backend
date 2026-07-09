@@ -1,40 +1,40 @@
 import { ApplicationStatus } from '../enums/application-status.enum';
 import { Gender } from '../enums/gender.enum';
-
-interface StudentProps {
-  id?: string;
-  parentId: string;
-  studentName: string;
-  dateOfBirth: Date;
-  gender: Gender;
-  previousSchool: string;
-  applyingGrade: string;
-  status: ApplicationStatus;
-  registrationPaid: boolean;
-  examSlotId?: string;
-  examScore?: number;
-  assignedCourse?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import { Grade } from '../enums/grade.enum';
 
 export class Student {
-  id?: string;
-  parentId: string;
-  studentName: string;
-  dateOfBirth: Date;
-  gender: Gender;
-  previousSchool: string;
-  applyingGrade: string;
-  status: ApplicationStatus;
-  registrationPaid: boolean;
-  examSlotId?: string;
-  examScore?: number;
-  assignedCourse?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  public readonly id?: string;
+  public readonly parentId: string;
 
-  constructor(props: StudentProps) {
+  public studentName: string;
+  public dateOfBirth: Date;
+  public gender: Gender;
+  public previousSchool: string;
+  public applyingGrade: Grade;
+  public status: ApplicationStatus;
+
+  public examSlotId?: string;
+  public examScore?: number;
+  public assignedCourse?: Grade;
+
+  public readonly createdAt?: Date;
+  public updatedAt?: Date;
+
+  constructor(props: {
+    id?: string;
+    parentId: string;
+    studentName: string;
+    dateOfBirth: Date;
+    gender: Gender;
+    previousSchool: string;
+    applyingGrade: Grade;
+    status: ApplicationStatus;
+    examSlotId?: string;
+    examScore?: number;
+    assignedCourse?: Grade;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }) {
     this.id = props.id;
     this.parentId = props.parentId;
     this.studentName = props.studentName;
@@ -43,7 +43,6 @@ export class Student {
     this.previousSchool = props.previousSchool;
     this.applyingGrade = props.applyingGrade;
     this.status = props.status;
-    this.registrationPaid = props.registrationPaid;
     this.examSlotId = props.examSlotId;
     this.examScore = props.examScore;
     this.assignedCourse = props.assignedCourse;
