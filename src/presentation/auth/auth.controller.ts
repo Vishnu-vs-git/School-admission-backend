@@ -51,10 +51,10 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(
+  logout(
     @Res({ passthrough: true })
     response: Response,
-  ): Promise<{ message: string }> {
+  ): { message: string } {
     CookieUtil.clearTokens(response, this.configService);
     return { message: SuccessMessages.LOGOUT_SUCCESS };
   }
