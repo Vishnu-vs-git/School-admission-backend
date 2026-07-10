@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: edustart-backend
+    env: node
+    plan: free
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        placeholder: "Enter your MongoDB URI (e.g. MongoDB Atlas connection string)"
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        placeholder: "Enter your frontend deployment URL (e.g. Vercel URL)"

@@ -1,15 +1,15 @@
 import { CookieOptions } from 'express';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export const CookieConstants = {
   ACCESS_TOKEN: 'accessToken',
   REFRESH_TOKEN: 'refreshToken',
-
-  SAME_SITE: 'lax' as const,
-
   PRODUCTION: 'production',
 } as const;
 
 export const BaseCookieOptions: CookieOptions = {
   httpOnly: true,
-  sameSite: 'lax',
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
 };
