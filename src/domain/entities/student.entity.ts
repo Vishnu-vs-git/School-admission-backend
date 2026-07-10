@@ -66,4 +66,15 @@ export class Student {
     this.examSlotId = examSlotId;
     this.status = ApplicationStatus.SLOT_BOOKED;
   }
+  public assignCourse(course: Grade): void {
+    this.assignedCourse = course;
+    this.status = ApplicationStatus.ADMISSION_COMPLETED;
+  }
+  public updateExamScore(score: number): void {
+    this.examScore = score;
+    this.status = ApplicationStatus.EXAM_COMPLETED;
+  }
+  public completeRegistrationFee(): void {
+    this.status = ApplicationStatus.REGISTRATION_FEE_PAID;
+  }
 }

@@ -57,4 +57,12 @@ export const ValidationMessages = {
   INVALID_TOTAL_SEATS: 'Total seats must be greater than 0.',
   EXAM_SLOT_REQUIRED: 'Exam slot is required.',
   EXAM_SLOT_ALREADY_BOOKED: 'Student has already booked an exam slot.',
+
+  //----Admission
+  EXAM_SCORE_REQUIRED: 'Exam score is required.',
+
+  INVALID_EXAM_SCORE: 'Exam score must be between 0 and 100.',
+  ASSIGNED_COURSE_REQUIRED: 'Assigned course is required.',
+
+  INVALID_ASSIGNED_COURSE: 'Please select a valid course.',
 } as const;

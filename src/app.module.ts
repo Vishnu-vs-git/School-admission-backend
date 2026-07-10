@@ -6,6 +6,7 @@ import { AuthModule } from './presentation/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StudentModule } from './presentation/student/student.module';
 import { ExamSlotModule } from './presentation/slot/slot.module';
+import { AdmissionModule } from './presentation/admission/admission.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ExamSlotModule } from './presentation/slot/slot.module';
     AuthModule,
     StudentModule,
     ExamSlotModule,
+    AdmissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
