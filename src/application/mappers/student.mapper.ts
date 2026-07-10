@@ -26,6 +26,7 @@ export class StudentMapper {
       previousSchool: student.previousSchool,
       applyingGrade: student.applyingGrade,
       status: student.status,
+      examSlotId: student.examSlotId,
       examScore: student.examScore,
       assignedCourse: student.assignedCourse,
       createdAt: student.createdAt,

@@ -12,9 +12,12 @@ export interface StudentResponseDto {
 
   status: ApplicationStatus;
 
+  examSlotId?: string;
+
   examScore?: number;
 
   assignedCourse?: Grade;
+
 
   createdAt?: Date;
 
