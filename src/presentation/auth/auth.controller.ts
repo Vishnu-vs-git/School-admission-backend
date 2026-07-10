@@ -48,4 +48,14 @@ export class AuthController {
 
     return result.user;
   }
+
+  @Post('logout')
+  async logout(
+    @Res({ passthrough: true })
+    response: Response,
+  ): Promise<{ message: string }> {
+    CookieUtil.clearTokens(response, this.configService);
+    return { message: 'Logged out successfully' };
+  }
 }
+
