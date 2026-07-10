@@ -9,6 +9,7 @@ import {
 } from 'src/infrastructure/persistence/exam-slot/exam-slot.schema';
 import { ExamSlotController } from './slot.controller';
 import { examSlotProviders } from './slot.providers';
+import { StudentModel, StudentSchema } from 'src/infrastructure/persistence/student/student.schema';
 
 @Module({
   imports: [
@@ -18,6 +19,10 @@ import { examSlotProviders } from './slot.providers';
       {
         name: ExamSlotModel.name,
         schema: ExamSlotSchema,
+      },
+      {
+        name: StudentModel.name,
+        schema: StudentSchema,
       },
     ]),
   ],

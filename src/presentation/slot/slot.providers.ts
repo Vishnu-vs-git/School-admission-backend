@@ -6,8 +6,10 @@ import {
   CREATE_EXAM_SLOT_USE_CASE,
   EXAM_SLOT_REPOSITORY,
   GET_AVAILABLE_EXAM_SLOTS_USE_CASE,
+  STUDENT_REPOSITORY,
 } from 'src/common/di/injection-token';
 import { ExamSlotRepository } from 'src/infrastructure/persistence/exam-slot/exam-slot.repository.impl';
+import { StudentRepository } from 'src/infrastructure/persistence/student/student.repository';
 
 export const examSlotProviders = [
   {
@@ -25,5 +27,9 @@ export const examSlotProviders = [
   {
     provide: BOOK_EXAM_SLOT_USE_CASE,
     useClass: BookExamSlotUseCase,
+  },
+  {
+    provide: STUDENT_REPOSITORY,
+    useClass: StudentRepository,
   },
 ];
