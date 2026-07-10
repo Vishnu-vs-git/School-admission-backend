@@ -1,6 +1,6 @@
-import { Body, Controller, Inject, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch, UseGuards } from '@nestjs/common';
 import { Roles } from '../auth/decorators/role.decorator';
-import { ASSIGN_COURSE_USE_CASE, UPDATE_EXAM_SCORE_USE_CASE } from 'src/common/di/injection-token';
+import { ASSIGN_COURSE_USE_CASE, STUDENT_REPOSITORY, UPDATE_EXAM_SCORE_USE_CASE } from 'src/common/di/injection-token';
 import type { IUpdateExamScoreUseCase } from 'src/application/interfaces/use-cases/admission/update-exam-score.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -12,6 +12,8 @@ import { StudentResponseDto } from 'src/application/dto/student/student-response
 import type { IAssignCourseDto } from 'src/application/dto/admission/assign-course.dto';
 import { assignCourseSchema } from './schemas/assign-course.schema';
 import type { IAssignCourseUseCase } from 'src/application/interfaces/use-cases/admission/assign-course.interface';
+import type { IStudentRepository } from 'src/domain/repositories/interfaces/student.repository';
+import { StudentMapper } from 'src/application/mappers/student.mapper';
 
 @Controller('admission')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -23,7 +25,16 @@ export class AdmissionController {
 
     @Inject(ASSIGN_COURSE_USE_CASE)
     private readonly assignCourseUseCase: IAssignCourseUseCase,
+
+    @Inject(STUDENT_REPOSITORY)
+    private readonly studentRepository: IStudentRepository,
   ) {}
+
+  @Get('students')
+  async getStudents(): Promise<StudentResponseDto[]> {
+    const students = await this.studentRepository.findAll();
+    return StudentMapper.toResponseDtoList(students);
+  }
 
   @Patch('students/:id/score')
   async updateExamScore(
@@ -43,3 +54,4 @@ export class AdmissionController {
     return this.assignCourseUseCase.execute(studentId, dto);
   }
 }
+
