@@ -1,98 +1,102 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Edustart Portal - Backend Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is the backend microservice for the Edustart School Admission Portal, built using **NestJS** and **MongoDB** using strict **Clean Architecture** patterns.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📂 Codebase Directory Structure
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```
+backend/src/
+├── domain/                    # Core business rules & entities (Independent of frameworks)
+│   ├── entities/              # Business entities (User, Student, ExamSlot)
+│   ├── enums/                 # Domain enumerations (Role, Grade, ApplicationStatus)
+│   └── repositories/          # Abstract database gateway interfaces
+├── application/               # Business application use cases
+│   ├── dto/                   # Data Transfer Objects for validation schemas
+│   ├── interfaces/            # Dependency injection contracts & use case signatures
+│   ├── types/                 # Application-specific payload types
+│   └── use-cases/             # Concrete implementation of business routines
+├── infrastructure/            # Framework implementations & external database systems
+│   ├── persistence/           # Database adapter repositories, Mongoose schemas and models
+│   └── services/              # Password hashing & external utility integrations
+├── presentation/              # Web Controller layer (HTTP handlers)
+│   ├── auth/                  # Register, Login, Logout controller and passport strategy
+│   ├── admission/             # Staff admission management controller
+│   └── slot/                  # Exam Slot controller
+└── common/                    # Constants, pipes, decorators, and middleware utilities
 ```
 
-## Compile and run the project
+---
 
+## 🛠️ Configuration & Installation
+
+1. **Install Packages**:
+   ```bash
+   npm install
+   ```
+2. **Environment Variables (`.env`)**:
+   ```env
+   PORT=5000
+   MONGO_URI=mongodb://localhost:27017/school-admission
+   JWT_ACCESS_SECRET=your_super_secret_access_token_key_here
+   JWT_REFRESH_SECRET=your_super_secret_refresh_token_key_here
+   FRONTEND_URL=http://localhost:3002
+   ```
+
+---
+
+## ⚙️ Available Scripts
+
+### Database Seeding
+Create the default `admission@test.com` admin user in MongoDB:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run seed:admin
 ```
 
-## Run tests
-
+### Running Server
 ```bash
-# unit tests
-$ npm run test
+# Development mode
+npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
+# Production build compilation
+npm run build
 
-# test coverage
-$ npm run test:cov
+# Start production server
+npm run start:prod
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### Testing
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Unit tests
+npm run test
+
+# End-to-end tests
+npm run test:e2e
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 🔌 API Endpoints Summary
 
-Check out a few resources that may come in handy when working with NestJS:
+### Authentication (`/api/auth`)
+* `POST /auth/register`: Parent registration (secured to force role `parent`).
+* `POST /auth/login`: Authenticates credentials and sets HTTP-only cookies.
+* `POST /auth/logout`: Clears authentication cookies.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Students (`/api/students`)
+* `POST /students`: Creates a new child admission application (Parent only).
+* `PUT /students/:id`: Updates student details before payment (Parent only).
+* `GET /students/:id`: Gets student application details.
+* `GET /students?page=1&limit=5`: Gets paginated student applications list for the logged-in parent.
+* `POST /students/:id/pay`: Complete registration fee payment (status transition).
 
-## Support
+### Admission Staff (`/api/admission`)
+* `GET /admission/students?page=1&limit=5`: Lists all student applications in the system (Staff only).
+* `PATCH /admission/students/:id/score`: Submits entrance exam scores (Staff only).
+* `PATCH /admission/students/:id/course`: Assigns a course level and finalizes admission (Staff only).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Exam Slots (`/api/exam-slots`)
+* `POST /exam-slots`: Creates new exam dates with limit capacity (Staff only).
+* `GET /exam-slots`: Lists available slots for parents, and all scheduled slots for staff.
+* `GET /exam-slots/:id`: Looks up specific slot details.
