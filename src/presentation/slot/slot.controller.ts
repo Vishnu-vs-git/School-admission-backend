@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, UseGuards, NotFoundException } from '@nestjs/common';
 
 import { Role } from 'src/domain/enums/role.enum';
 
@@ -11,6 +11,7 @@ import type { IExamSlotResponseDto } from 'src/application/dto/exam-slot/exam-sl
 import {
   BOOK_EXAM_SLOT_USE_CASE,
   CREATE_EXAM_SLOT_USE_CASE,
+  EXAM_SLOT_REPOSITORY,
   GET_AVAILABLE_EXAM_SLOTS_USE_CASE,
 } from 'src/common/di/injection-token';
 import type { ICreateExamSlotUseCase } from 'src/application/interfaces/use-cases/exam-slot/create-exam-slot.interface';
@@ -24,6 +25,8 @@ import { bookExamSlotSchema } from './schemas/bookExamSlotSchema';
 import { BookExamSlotDto } from 'src/application/dto/exam-slot/book-exam-slot.dto';
 import { StudentResponseDto } from 'src/application/dto/student/student-response.dto';
 import type { IBookExamSlotUseCase } from 'src/application/interfaces/use-cases/exam-slot/book-exam-slot.interface';
+import type { IExamSlotRepository } from 'src/domain/repositories/interfaces/exam-slot.repository';
+import { ExamSlotMapper } from 'src/application/mappers/exam-slot.mapper';
 
 @Controller('exam-slots')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -35,6 +38,8 @@ export class ExamSlotController {
     private readonly getAvailableExamSlotsUseCase: IGetAvailableExamSlotsUseCase,
     @Inject(BOOK_EXAM_SLOT_USE_CASE)
     private readonly bookExamSlotUseCase: IBookExamSlotUseCase,
+    @Inject(EXAM_SLOT_REPOSITORY)
+    private readonly examSlotRepository: IExamSlotRepository,
   ) {}
 
   @Post()
@@ -45,11 +50,27 @@ export class ExamSlotController {
   ): Promise<IExamSlotResponseDto> {
     return this.createExamSlotUseCase.execute(dto);
   }
+
   @Get()
-  @Roles(Role.PARENT)
-  async getAvailableSlots(): Promise<IExamSlotResponseDto[]> {
+  @Roles(Role.PARENT, Role.ADMISSION)
+  async getAvailableSlots(@CurrentUser() user: JwtPayload): Promise<IExamSlotResponseDto[]> {
+    if (user.role === Role.ADMISSION) {
+      const slots = await this.examSlotRepository.findAll();
+      return ExamSlotMapper.toResponseDtoList(slots);
+    }
     return this.getAvailableExamSlotsUseCase.execute();
   }
+
+  @Get(':id')
+  @Roles(Role.PARENT, Role.ADMISSION)
+  async getSlotById(@Param('id') id: string): Promise<IExamSlotResponseDto> {
+    const slot = await this.examSlotRepository.findById(id);
+    if (!slot) {
+      throw new NotFoundException('Exam slot not found');
+    }
+    return ExamSlotMapper.toResponseDto(slot);
+  }
+
   @Post(':studentId/book')
   @Roles(Role.PARENT)
   async bookExamSlot(
@@ -61,3 +82,4 @@ export class ExamSlotController {
     return this.bookExamSlotUseCase.execute(studentId, user.id, dto);
   }
 }
+
