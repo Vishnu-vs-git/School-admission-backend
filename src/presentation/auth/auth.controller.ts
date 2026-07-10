@@ -11,6 +11,7 @@ import { UserResponseDto } from 'src/application/dto/auth/user-response.dto';
 import { loginSchema } from './schemas/login.schema';
 import { LoginDto } from 'src/application/dto/auth/login.dto';
 import type { Response } from 'express';
+import { SuccessMessages } from 'src/common/constants/success-messages';
 
 @Controller('auth')
 export class AuthController {
@@ -47,5 +48,14 @@ export class AuthController {
     CookieUtil.setRefreshToken(response, result.refreshToken, this.configService);
 
     return result.user;
+  }
+
+  @Post('logout')
+  async logout(
+    @Res({ passthrough: true })
+    response: Response,
+  ): Promise<{ message: string }> {
+    CookieUtil.clearTokens(response, this.configService);
+    return { message: SuccessMessages.LOGOUT_SUCCESS };
   }
 }

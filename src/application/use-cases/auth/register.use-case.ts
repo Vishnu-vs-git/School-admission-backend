@@ -7,6 +7,8 @@ import { UserMapper } from 'src/application/mappers/user.mapper';
 import { ErrorMessages } from 'src/common/constants/error-messages';
 import { PASSWORD_SERVICE, USER_REPOSITORY } from 'src/common/di/injection-token';
 import type { IUserRepository } from 'src/domain/repositories/interfaces/user.repository';
+import { Role } from 'src/domain/enums/role.enum';
+
 @Injectable()
 export class RegisterUseCase implements IRegisterUseCase {
   constructor(
@@ -27,6 +29,7 @@ export class RegisterUseCase implements IRegisterUseCase {
     const user = UserMapper.toEntity({
       ...dto,
       password: hashedPassword,
+      role: Role.PARENT,
     });
 
     const createdUser = await this.userRepository.create(user);
