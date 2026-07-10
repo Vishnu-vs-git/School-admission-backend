@@ -11,35 +11,33 @@ import { User } from '../domain/entities/user.entity';
 import { Role } from '../domain/enums/role.enum';
 
 async function bootstrap() {
-    const app = await NestFactory.createApplicationContext(AppModule);
+  const app = await NestFactory.createApplicationContext(AppModule);
 
-    const userRepository = app.get<IUserRepository>(USER_REPOSITORY);
-    const passwordService = app.get<IPasswordService>(PASSWORD_SERVICE);
+  const userRepository = app.get<IUserRepository>(USER_REPOSITORY);
+  const passwordService = app.get<IPasswordService>(PASSWORD_SERVICE);
 
-    const existingUser = await userRepository.findByEmail(
-        'admission@test.com',
-    );
+  const existingUser = await userRepository.findByEmail('admission@test.com');
 
-    if (existingUser) {
-        console.log('Admission user already exists.');
-        await app.close();
-        return;
-    }
-
-    const hashedPassword = await passwordService.hash('Password@123');
-
-    const admissionUser = new User({
-        name: 'Admission Team',
-        email: 'admission@test.com',
-        password: hashedPassword,
-        role: Role.ADMISSION,
-    });
-
-    await userRepository.create(admissionUser);
-
-    console.log('Admission user created successfully.');
-
+  if (existingUser) {
+    console.log('Admission user already exists.');
     await app.close();
+    return;
+  }
+
+  const hashedPassword = await passwordService.hash('Password@123');
+
+  const admissionUser = new User({
+    name: 'Admission Team',
+    email: 'admission@test.com',
+    password: hashedPassword,
+    role: Role.ADMISSION,
+  });
+
+  await userRepository.create(admissionUser);
+
+  console.log('Admission user created successfully.');
+
+  await app.close();
 }
 
 void bootstrap();

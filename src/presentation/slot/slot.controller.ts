@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Inject, Param, Post, UseGuards, NotFoundException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  UseGuards,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { Role } from 'src/domain/enums/role.enum';
 
@@ -82,4 +91,3 @@ export class ExamSlotController {
     return this.bookExamSlotUseCase.execute(studentId, user.id, dto);
   }
 }
-

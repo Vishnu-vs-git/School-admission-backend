@@ -36,4 +36,3 @@ export class RegisterUseCase implements IRegisterUseCase {
     return UserMapper.toResponseDto(createdUser);
   }
 }
-

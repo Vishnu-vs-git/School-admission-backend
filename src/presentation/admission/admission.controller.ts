@@ -1,6 +1,10 @@
-import { Body, Controller, Get, Inject, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch, UseGuards, Query } from '@nestjs/common';
 import { Roles } from '../auth/decorators/role.decorator';
-import { ASSIGN_COURSE_USE_CASE, STUDENT_REPOSITORY, UPDATE_EXAM_SCORE_USE_CASE } from 'src/common/di/injection-token';
+import {
+  ASSIGN_COURSE_USE_CASE,
+  STUDENT_REPOSITORY,
+  UPDATE_EXAM_SCORE_USE_CASE,
+} from 'src/common/di/injection-token';
 import type { IUpdateExamScoreUseCase } from 'src/application/interfaces/use-cases/admission/update-exam-score.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -31,9 +35,27 @@ export class AdmissionController {
   ) {}
 
   @Get('students')
-  async getStudents(): Promise<StudentResponseDto[]> {
-    const students = await this.studentRepository.findAll();
-    return StudentMapper.toResponseDtoList(students);
+  async getStudents(
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+  ): Promise<{
+    data: StudentResponseDto[];
+    meta: { total: number; page: number; limit: number; totalPages: number };
+  }> {
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.max(1, parseInt(limit, 10) || 10);
+
+    const { students, total } = await this.studentRepository.findPaginated(pageNum, limitNum);
+
+    return {
+      data: StudentMapper.toResponseDtoList(students),
+      meta: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+      },
+    };
   }
 
   @Patch('students/:id/score')
@@ -54,4 +76,3 @@ export class AdmissionController {
     return this.assignCourseUseCase.execute(studentId, dto);
   }
 }
-

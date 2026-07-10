@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, Put, UseGuards, Query } from '@nestjs/common';
 
 import { StudentResponseDto } from 'src/application/dto/student/student-response.dto';
 
@@ -10,6 +10,7 @@ import {
   GET_STUDENT_USE_CASE,
   GET_STUDENTS_USE_CASE,
   UPDATE_STUDENT_USE_CASE,
+  STUDENT_REPOSITORY,
 } from 'src/common/di/injection-token';
 
 import { Role } from 'src/domain/enums/role.enum';
@@ -27,6 +28,8 @@ import { updateStudentSchema } from './schemas/update-student.schema';
 import type { IGetStudentUseCase } from 'src/application/interfaces/use-cases/student/get-student.interface';
 import type { IGetStudentsUseCase } from 'src/application/interfaces/use-cases/student/get-students.interface';
 import type { ICompleteRegistrationFeeUseCase } from 'src/application/interfaces/use-cases/student/complete-registration-fee.interface';
+import type { IStudentRepository } from 'src/domain/repositories/interfaces/student.repository';
+import { StudentMapper } from 'src/application/mappers/student.mapper';
 
 @Controller('students')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -42,6 +45,8 @@ export class StudentController {
     private readonly getStudentsUseCase: IGetStudentsUseCase,
     @Inject(COMPLETE_REGISTRATION_FEE_USE_CASE)
     private readonly completeRegistrationFeeUseCase: ICompleteRegistrationFeeUseCase,
+    @Inject(STUDENT_REPOSITORY)
+    private readonly studentRepository: IStudentRepository,
   ) {}
 
   @Post()
@@ -73,8 +78,32 @@ export class StudentController {
   }
   @Get()
   @Roles(Role.PARENT)
-  async getStudents(@CurrentUser() user: JwtPayload): Promise<StudentResponseDto[]> {
-    return this.getStudentsUseCase.execute(user.id);
+  async getStudents(
+    @CurrentUser() user: JwtPayload,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+  ): Promise<{
+    data: StudentResponseDto[];
+    meta: { total: number; page: number; limit: number; totalPages: number };
+  }> {
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.max(1, parseInt(limit, 10) || 10);
+
+    const { students, total } = await this.studentRepository.findByParentIdPaginated(
+      user.id,
+      pageNum,
+      limitNum,
+    );
+
+    return {
+      data: StudentMapper.toResponseDtoList(students),
+      meta: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+      },
+    };
   }
   @Post(':id/pay')
   @Roles(Role.PARENT)

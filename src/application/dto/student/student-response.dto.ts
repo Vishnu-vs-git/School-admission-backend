@@ -18,7 +18,6 @@ export interface StudentResponseDto {
 
   assignedCourse?: Grade;
 
-
   createdAt?: Date;
 
   updatedAt?: Date;

@@ -51,9 +51,42 @@ export class StudentRepository implements IStudentRepository {
     return StudentFactory.toDomainList(documents);
   }
 
+  async findByParentIdPaginated(
+    parentId: string,
+    page: number,
+    limit: number,
+  ): Promise<{ students: Student[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const [documents, total] = await Promise.all([
+      this.studentModel.find({ parentId }).skip(skip).limit(limit).exec(),
+      this.studentModel.countDocuments({ parentId }).exec(),
+    ]);
+
+    return {
+      students: StudentFactory.toDomainList(documents),
+      total,
+    };
+  }
+
   async findAll(): Promise<Student[]> {
     const documents = await this.studentModel.find();
 
     return StudentFactory.toDomainList(documents);
+  }
+
+  async findPaginated(
+    page: number,
+    limit: number,
+  ): Promise<{ students: Student[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const [documents, total] = await Promise.all([
+      this.studentModel.find().skip(skip).limit(limit).exec(),
+      this.studentModel.countDocuments().exec(),
+    ]);
+
+    return {
+      students: StudentFactory.toDomainList(documents),
+      total,
+    };
   }
 }
