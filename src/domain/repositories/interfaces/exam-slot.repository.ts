@@ -4,8 +4,9 @@ export interface IExamSlotRepository {
   create(slot: ExamSlot): Promise<ExamSlot>;
 
   findAll(): Promise<ExamSlot[]>;
+  findAvailableSlots(): Promise<ExamSlot[]>;
 
   findById(id: string): Promise<ExamSlot | null>;
 
-  update(slot: ExamSlot): Promise<ExamSlot>;
+  update(slot: ExamSlot): Promise<ExamSlot | null>;
 }

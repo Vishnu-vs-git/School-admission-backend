@@ -26,4 +26,14 @@ export class ExamSlot {
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
   }
+  public hasAvailableSeats(): boolean {
+    return this.bookedSeats < this.totalSeats;
+  }
+
+  public bookSeat(): void {
+    this.bookedSeats++;
+  }
+  public isFull(): boolean {
+    return this.bookedSeats >= this.totalSeats;
+  }
 }

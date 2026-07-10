@@ -6,29 +6,24 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { STUDENT_REPOSITORY } from 'src/common/di/injection-token';
-import { StudentMessages } from 'src/common/constants/student-messages';
-
-import { StudentMapper } from 'src/application/mappers/student.mapper';
 import { StudentResponseDto } from 'src/application/dto/student/student-response.dto';
-import { UpdateStudentDto } from 'src/application/dto/student/update-student.dto';
-import { IUpdateStudentUseCase } from 'src/application/interfaces/use-cases/student/update-student.interface';
+import { ICompleteRegistrationFeeUseCase } from 'src/application/interfaces/use-cases/student/complete-registration-fee.interface';
+import { StudentMapper } from 'src/application/mappers/student.mapper';
+
+import { StudentMessages } from 'src/common/constants/student-messages';
+import { STUDENT_REPOSITORY } from 'src/common/di/injection-token';
 
 import { ApplicationStatus } from 'src/domain/enums/application-status.enum';
 import type { IStudentRepository } from 'src/domain/repositories/interfaces/student.repository';
 
 @Injectable()
-export class UpdateStudentUseCase implements IUpdateStudentUseCase {
+export class CompleteRegistrationFeeUseCase implements ICompleteRegistrationFeeUseCase {
   constructor(
     @Inject(STUDENT_REPOSITORY)
     private readonly studentRepository: IStudentRepository,
   ) {}
 
-  async execute(
-    studentId: string,
-    parentId: string,
-    dto: UpdateStudentDto,
-  ): Promise<StudentResponseDto> {
+  async execute(studentId: string, parentId: string): Promise<StudentResponseDto> {
     const student = await this.studentRepository.findById(studentId);
 
     if (!student) {
@@ -39,11 +34,15 @@ export class UpdateStudentUseCase implements IUpdateStudentUseCase {
       throw new ForbiddenException(StudentMessages.ACCESS_DENIED);
     }
 
-    if (student.status !== ApplicationStatus.APPLICATION_CREATED) {
-      throw new BadRequestException(StudentMessages.UPDATE_NOT_ALLOWED);
+    if (student.status === ApplicationStatus.REGISTRATION_FEE_PAID) {
+      throw new BadRequestException(StudentMessages.PAYMENT_ALREADY_COMPLETED);
     }
 
-    student.updateDetails(dto);
+    if (student.status !== ApplicationStatus.APPLICATION_CREATED) {
+      throw new BadRequestException(StudentMessages.INVALID_STATUS_TRANSITION);
+    }
+
+    student.status = ApplicationStatus.REGISTRATION_FEE_PAID;
 
     const updatedStudent = await this.studentRepository.update(student);
 
